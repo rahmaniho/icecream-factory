@@ -28,11 +28,23 @@ python3 -m http.server 8000
 
 ## 🌍 انتشار روی GitHub Pages
 
-ورک‌فلو `.github/workflows/pages.yml` با هر push روی شاخه‌ی `main` (یا اجرای دستی از تب Actions) سایت را به‌صورت خودکار منتشر می‌کند:
+ورک‌فلو `.github/workflows/pages.yml` با هر push روی شاخه‌ی `main` (یا اجرای دستی از تب Actions) سایت را به‌صورت خودکار منتشر می‌کند.
 
-**Settings → Pages → Source: GitHub Actions**
+### فعال‌سازی یک‌باره (در تنظیمات مخزن)
+
+1. **Settings → Pages → Build and deployment → Source → GitHub Actions**
+2. **Settings → Actions → General → Workflow permissions → Read and write permissions**
+
+> اگر این دو مورد تنظیم نشده باشند، ورک‌فلو با پیام راهنمای فارسی شکست می‌خورد و دقیقاً می‌گوید چه چیزی را فعال کنید.
 
 نشانی نهایی: `https://<username>.github.io/<repository>/`
+
+### عیب‌یابی
+
+| پیام خطا | راه‌حل |
+| --- | --- |
+| `GitHub Pages هنوز روی این مخزن فعال نیست` | مورد ۱ بالا را انجام دهید و ورک‌فلو را Re-run کنید |
+| `Resource not accessible by integration` در مرحله‌ی deploy | مورد ۲ بالا (مجوز Read and write) را انجام دهید و Re-run کنید |
 
 ## ⚙️ شخصی‌سازی
 

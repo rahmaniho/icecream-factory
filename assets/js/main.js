@@ -205,7 +205,37 @@ function renderCart() {
   $('#sum-discount-label').textContent = `تخفیف عمده (${faDigits(rate * 100)}٪)`;
   $('#sum-discount').textContent = '− ' + faMoney(discount);
   $('#sum-total').textContent = faMoney(subtotal - discount);
+
+  // به‌روزرسانی نوار سفارش چسبان موبایل
+  syncMobileBar(totalUnits, subtotal - discount);
 }
+
+// نوار چسبان پایین موبایل: نمایش جمع سبد و دکمه ادامه سفارش
+let orderSectionInView = false; // آیا بخش سفارش الان در دید کاربر است؟
+let lastCount = 0;              // آخرین تعداد اقلام سبد
+let lastTotal = 0;              // آخرین مبلغ قابل پرداخت
+function refreshMobileBar() {
+  const bar = $('#mobile-order-bar');
+  $('#mob-bar-count').textContent = faDigits(lastCount);
+  $('#mob-bar-total').textContent = faMoney(lastTotal);
+  document.body.classList.toggle('cart-open', lastCount > 0);
+  // نوار فقط وقتی سبد پر است و کاربر در بخش سفارش نیست نمایش داده می‌شود
+  bar.classList.toggle('show', lastCount > 0 && !orderSectionInView);
+}
+// از رندر سبد صدا زده می‌شود تا ارقام نوار همیشه دقیق بماند
+function syncMobileBar(count, total) {
+  lastCount = count;
+  lastTotal = total;
+  refreshMobileBar();
+}
+// وقتی کاربر به بخش سفارش می‌رسد، نوار چسبان پنهان می‌شود (خود بخش دیده می‌شود)
+new IntersectionObserver(
+  ([entry]) => {
+    orderSectionInView = entry.isIntersecting;
+    refreshMobileBar();
+  },
+  { threshold: 0.15 }
+).observe($('#order'));
 
 // کلیک‌های داخل سبد (افزایش/کاهش) با واگذاری رویداد
 cartItemsEl.addEventListener('click', (e) => {

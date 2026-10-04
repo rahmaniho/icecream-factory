@@ -35,6 +35,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # بررسی فعال بودن GitHub Pages + راهنمای فارسی در صورت غیرفعال بودن
+      - name: Check Pages is enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+                  -H "Accept: application/vnd.github+json" \
+                  "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages" > /dev/null; then
+            echo "✅ GitHub Pages روی این مخزن فعال است."
+          else
+            echo "::error::GitHub Pages هنوز روی این مخزن فعال نیست."
+            echo "❌ برای فعال‌سازی (یک‌بار، در تنظیمات مخزن):"
+            echo "   1) Settings > Pages > Build and deployment > Source = GitHub Actions"
+            echo "   2) Settings > Actions > General > Workflow permissions = Read and write permissions"
+            echo "   سپس این ورک‌فلو را دوباره اجرا کنید (Actions > Deploy to GitHub Pages > Re-run)."
+            exit 1
+          fi
+
       # آماده‌سازی خروجی Pages (کل سایت استاتیک است)
       - name: Setup Pages
         uses: actions/configure-pages@v5

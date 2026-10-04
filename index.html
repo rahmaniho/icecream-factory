@@ -11,6 +11,10 @@
   <meta property="og:description" content="بستنی سنتی و زعفرانی با مغز گردو، پسته و بادام — تولید دست‌ساز در کارگاه کوچک خانوادگی. سفارش خرده و عمده." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/img/hero-bastani.jpg" />
+  <meta property="og:locale" content="fa_IR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="بستنی سنتی زعفرونی | طعم اصیل، دست‌ساز" />
+  <meta name="twitter:image" content="assets/img/hero-bastani.jpg" />
 
   <!-- ===================== فونت فارسی وزیرمتن ===================== -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -777,6 +781,23 @@
       </div>
     </div>
   </footer>
+
+  <!-- ============================================================
+       نوار سفارش چسبان موبایل: وقتی سبد پر است، جمع کل و دکمه ادامه سفارش
+       پایین صفحه نمایش داده می‌شود (فقط روی موبایل)
+  ============================================================ -->
+  <div id="mobile-order-bar" class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-white/95 backdrop-blur border-t border-saffron-200 shadow-[0_-8px_24px_-12px_rgba(110,64,22,0.25)] px-4 py-3">
+    <div class="flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <p class="text-[11px] text-cocoa-500">جمع سفارش (<span id="mob-bar-count">۰</span> قلم)</p>
+        <p id="mob-bar-total" class="text-sm font-black text-cocoa-900 truncate">۰ تومان</p>
+      </div>
+      <a href="#order" class="shrink-0 inline-flex items-center gap-2 bg-saffron-500 hover:bg-saffron-600 text-white text-sm font-bold px-5 py-3 rounded-full shadow-soft transition-colors">
+        ادامه سفارش
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg>
+      </a>
+    </div>
+  </div>
 
   <!-- ============================================================
        دکمه‌های شناور: واتساپ و بازگشت به بالا

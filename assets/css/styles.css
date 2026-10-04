@@ -283,6 +283,17 @@ html {
   50% { transform: translateY(-10px); }
 }
 
+/* ---------- نوار سفارش چسبان موبایل ---------- */
+#mobile-order-bar {
+  transform: translateY(110%);
+  transition: transform .35s cubic-bezier(.2,.7,.3,1);
+}
+#mobile-order-bar.show { transform: none; }
+/* وقتی نوار سفارش باز است، دکمه‌های شناور بالاتر می‌روند تا تداخل نکنند */
+body.cart-open #whatsapp-float { bottom: 5.75rem; }
+body.cart-open #to-top { bottom: 5.75rem; }
+#whatsapp-float, #to-top { transition: transform .25s, bottom .35s, opacity .3s, background-color .25s; }
+
 /* ---------- ضربان دکمه شناور واتساپ ---------- */
 .wa-pulse { animation: wa-pulse 2.6s infinite; }
 @keyframes wa-pulse {
