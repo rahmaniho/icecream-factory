@@ -1,0 +1,51 @@
+# ============================================================
+# استقرار خودکار روی GitHub Pages
+# با هر push روی شاخه‌های زیر (یا اجرای دستی)، سایت ساخته و
+# روی https://<user>.github.io/<repo>/ منتشر می‌شود.
+# چون سایت کاملاً استاتیک است، فقط کافی است فایل‌ها آپلود شوند.
+# ============================================================
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - arena/01a1071c-icecream-factory
+  workflow_dispatch:
+
+# دسترسی‌های لازم برای استقرار Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# فقط یک استقرار هم‌زمان اجرا شود
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      # دریافت کد مخزن
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # آماده‌سازی خروجی Pages (کل سایت استاتیک است)
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # بارگذاری فایل‌های سایت به عنوان artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      # استقرار نهایی روی GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
