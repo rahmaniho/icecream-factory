@@ -1,0 +1,69 @@
+# ============================================================
+# استقرار خودکار روی GitHub Pages
+# با هر push روی شاخه‌های زیر (یا اجرای دستی)، سایت ساخته و
+# روی https://<user>.github.io/<repo>/ منتشر می‌شود.
+# چون سایت کاملاً استاتیک است، فقط کافی است فایل‌ها آپلود شوند.
+# ============================================================
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - arena/01a1071c-icecream-factory
+  workflow_dispatch:
+
+# دسترسی‌های لازم برای استقرار Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# فقط یک استقرار هم‌زمان اجرا شود
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      # دریافت کد مخزن
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # بررسی فعال بودن GitHub Pages + راهنمای فارسی در صورت غیرفعال بودن
+      - name: Check Pages is enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+                  -H "Accept: application/vnd.github+json" \
+                  "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages" > /dev/null; then
+            echo "✅ GitHub Pages روی این مخزن فعال است."
+          else
+            echo "::error::GitHub Pages هنوز روی این مخزن فعال نیست."
+            echo "❌ برای فعال‌سازی (یک‌بار، در تنظیمات مخزن):"
+            echo "   1) Settings > Pages > Build and deployment > Source = GitHub Actions"
+            echo "   2) Settings > Actions > General > Workflow permissions = Read and write permissions"
+            echo "   سپس این ورک‌فلو را دوباره اجرا کنید (Actions > Deploy to GitHub Pages > Re-run)."
+            exit 1
+          fi
+
+      # آماده‌سازی خروجی Pages (کل سایت استاتیک است)
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # بارگذاری فایل‌های سایت به عنوان artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      # استقرار نهایی روی GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
